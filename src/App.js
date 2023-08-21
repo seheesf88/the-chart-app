@@ -80,7 +80,7 @@ function App() {
       <h1>Stock chart app with chart.js</h1>
       <div className="row pt-md-5">
         <div className="form-group col-md-8">
-          <label for="stockSymbol">Stock symbol</label>
+          <label htmlFor="stockSymbol">Stock symbol</label>
           <input
             id="stockSymbol"
             type="text"
@@ -91,7 +91,7 @@ function App() {
           />
         </div>
         <div className="form-group col-md-2">
-          <label for="days">Day(s)</label>
+          <label htmlFor="days">Day(s)</label>
           <input
             id="days"
             value={dayInput}
