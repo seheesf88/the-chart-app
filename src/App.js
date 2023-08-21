@@ -77,6 +77,7 @@ function App() {
 
   return (
     <div className="container pt-md-4">
+      <h1>Stock chart app with chart.js</h1>
       <div className="row pt-md-5">
         <div className="form-group col-md-8">
           <label for="stockSymbol">Stock symbol</label>
@@ -103,7 +104,7 @@ function App() {
           className="btn btn-primary col-md-2"
           onClick={handleFetchButtonClick}
         >
-          Get Data
+          Get stock price
         </button>
       </div>
 
