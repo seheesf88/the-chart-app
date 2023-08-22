@@ -16,11 +16,11 @@ function App() {
   });
   const [stockSymbolInput, setStockSymbolInput] = useState('');
   const [dayInput, setDayInput] = useState('');
-  const apiKey = 'BAX3XPJAS4JPJ8XO'; 
+  const API_KEY = process.env.REACT_APP_API_KEY
 
   const fetchData = async (stockSymbol, days = 10) => {
     try {
-      const response = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${stockSymbol}&outputsize=compact&apikey=${apiKey}`);
+      const response = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${stockSymbol}&outputsize=compact&apikey=${API_KEY}`);
 
       
       if (!response.ok) {

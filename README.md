@@ -3,6 +3,7 @@ The Stock Price Visualization App is a user-friendly tool that allows you to vis
 
 ## Libraries & technologies
 React.js, chart.js, Bootstraps, RESTful api
-## installation
+3rd API: https://www.alphavantage.co/documentation/
+## Installation
 ```npm install```
 
