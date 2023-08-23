@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import CompanyProfile from '../ui-components/CompanyProfile.js';
 import StockChart from './StockChart.js';
-import PieChart from "../ui-components/PieChart";
 
 function Home() {
   const [stockSymbolInput, setStockSymbolInput] = useState('');
@@ -21,6 +20,16 @@ function Home() {
     ],
   });
 
+  const [volumData, setVolumData] = useState({
+    labels: [],
+    datasets: [
+      {
+        label: "Volume",
+        data: [],
+      },
+    ],
+  });
+
   const [ companyInfoData, setCompanyInfoData ] = useState({});
 
   const API_KEY = process.env.REACT_APP_API_KEY
@@ -29,19 +38,25 @@ function Home() {
     try {
       const response = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${stockSymbol}&outputsize=compact&apikey=${API_KEY}`);
 
-      
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       
       const parsedData = await response.json();
+ 
+      if(parsedData.Note || parsedData.Information) {
+        alert(parsedData.Note || parsedData.Information)
+      }
+
       const dailyData = parsedData["Time Series (Daily)"]
 
       const labels = [];
       const openPriceData = [];
       const closedPriceData = [];
+      const volumData = [];
+      const pieChartColor = [];
       let entryCount = 0
-
+      
       for (const date in dailyData) {
         if (entryCount >= days) {
           break;
@@ -50,6 +65,8 @@ function Home() {
         labels.push(date);
         openPriceData.push(parseFloat(entry["1. open"]));
         closedPriceData.push(parseFloat(entry["4. close"]));
+        volumData.push(entry["5. volumes"]);
+        pieChartColor.push(randomColor(days))
         entryCount++;
       }
 
@@ -74,8 +91,21 @@ function Home() {
             borderColor: "red",
             borderWidth: 2,
           }
-        ],
+        ]
       });
+
+      setVolumData({
+        labels,
+        datasets: [
+          {
+            label: "Volume",
+            data: volumData,
+            backgroundColor: pieChartColor,
+            borderColor: "black",
+            borderWidth: 1
+          }
+        ]
+      })
 
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -101,6 +131,12 @@ function Home() {
       console.error('Error fetching data:', error);
     }
   };
+
+  const randomColor = (number) => {
+    const random = () => Math.floor(Math.random() * 256);
+    const colorCode = `#${random().toString(16).padStart(2, '0')}${random().toString(16).padStart(2, '0')}${random().toString(16).padStart(2, '0')}`;
+    return colorCode.toUpperCase();
+  }
 
   const formData = (data) =>  {
     const camelCaseData = {};
@@ -171,11 +207,10 @@ function Home() {
           <CompanyProfile companyInfo={companyInfoData}/>
         </div>
         <div className="col-8">
-          <StockChart userData={userData} />
+          <StockChart userData={userData} volumData={volumData}/>
         </div>
       </div>
 
-      <PieChart chartData={userData} />
     </div>
   )
 }
